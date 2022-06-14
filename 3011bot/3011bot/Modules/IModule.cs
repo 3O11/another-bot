@@ -5,8 +5,10 @@ namespace bot
 {
     internal interface IModule
     {
-        string Name { get; init; }
-        void Process(MessageWrapper msg);
+        string Name { get; }
+        bool ProcessDialogues(MessageWrapper msg);
+        bool ProcessCommands(MessageWrapper msg);
+        bool ProcessTriggers(MessageWrapper msg);
         string GetHelp();
     }
 }

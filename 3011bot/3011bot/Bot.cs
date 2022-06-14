@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -9,25 +8,23 @@ namespace bot
 {
     internal class Bot
     {
-        public Bot(string name)
+        public Bot(string name, string token)
         {
-            _name = name;
-            _client = new DiscordSocketClient();
-            _modules = new ConcurrentDictionary<string, IModule>();
+            Name = name;
+            _token = token;
 
             _client.Log += Log;
             _client.MessageReceived += OnMessage;
         }
 
-        public void RegisterModule(IModule module)
+        public void AddModule(IModule module)
         {
-            _modules[module.Name] = module;
+            _modules.Add(module);
         }
 
         public async void Start()
         {
-            string token = "";
-            await _client.LoginAsync(TokenType.Bot, token);
+            await _client.LoginAsync(TokenType.Bot, _token);
             await _client.StartAsync();
         }
 
@@ -40,29 +37,35 @@ namespace bot
         private Task OnMessage(SocketMessage msg)
         {
             return Task.Run(() => {
-                if (msg.Author.IsBot) return;
+                if (msg.Author.IsBot) 
+                    return;
 
-                // Evaluate dialogues
-
-                // Evaluate command
-                if (msg.Content.StartsWith(_name + " "))
+                // Evaluate message
+                var wrappedMsg = new MessageWrapper(msg, msg.Content.StartsWith(Name + " ") ? Name.Length + 1 : 0);
+                foreach (var module in _modules)
                 {
-                    var msgWrapper = new MessageWrapper(msg, _name.Length + 1);
+                    if (module.ProcessDialogues(wrappedMsg)) return;
+                }
+                foreach (var module in _modules)
+                {
+                    if (module.ProcessCommands(wrappedMsg)) return;
+                }
+                foreach (var module in _modules)
+                {
+                    if (module.ProcessTriggers(wrappedMsg)) return;
+                }
 
-                    int nameLength = msgWrapper.Content.IndexOf(' ');
-                    string moduleName = nameLength == -1 ? msgWrapper.Content : msgWrapper.Content.Substring(0, nameLength);
-
-                    if (_modules.TryGetValue(moduleName, out IModule? module))
-                    {
-                        msgWrapper.BumpOffset(module.Name.Length + 1);
-                        module.Process(msgWrapper);
-                    }
+                if (!wrappedMsg.IsRaw())
+                {
+                    msg.Channel.SendMessageAsync("Unknown command");
                 }
             });
         }
 
-        private string _name;
-        private DiscordSocketClient _client;
-        private ConcurrentDictionary<string, IModule> _modules;
+        public string Name { get; init; }
+
+        private string _token;
+        private DiscordSocketClient _client = new();
+        private List<IModule> _modules = new();
     }
 }

@@ -7,31 +7,33 @@ using System.Threading.Tasks;
 
 namespace bot
 {
-    internal class UtilitiesModule : IModule
+    internal class UtilitiesModule : DialogueModuleBase
     {
         public UtilitiesModule()
         {
             Name = "utils";
         }
 
-        public string Name { get; init; }
-
-        public bool CanProcess(SocketMessage msg)
+        public override string GetHelp()
         {
             throw new NotImplementedException();
         }
 
-        public string GetHelp()
+        public override bool ProcessCommandsExt(MessageWrapper msg)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Process(MessageWrapper msg)
-        {
-            if (msg.Content.StartsWith("ping"))
+            if (msg.Content == "ping")
             {
                 msg.RawMsg.Channel.SendMessageAsync("Pong!");
+                return true;
             }
+            else if (msg.Content == "testDialogue")
+            {
+                msg.RawMsg.Channel.SendMessageAsync("Starting generic dialogue");
+                addDialogue(msg.RawMsg.Channel.Id, new GenericDialogue());
+                return true;
+            }
+
+            return false;
         }
     }
 }
