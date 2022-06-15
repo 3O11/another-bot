@@ -28,6 +28,16 @@ namespace bot
             await _client.StartAsync();
         }
 
+        public SocketUser GetUser(ulong userId)
+        {
+            return _client.GetUser(userId);
+        }
+
+        public SocketChannel GetChannel(ulong channelId)
+        {
+            return _client.GetChannel(channelId);
+        }
+
         private Task Log(LogMessage msg)
         {
             Console.WriteLine(msg.ToString());
@@ -54,7 +64,6 @@ namespace bot
                 {
                     if (module.ProcessTriggers(wrappedMsg)) return;
                 }
-
                 if (!wrappedMsg.IsRaw())
                 {
                     msg.Channel.SendMessageAsync("Unknown command");
