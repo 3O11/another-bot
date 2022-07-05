@@ -9,17 +9,17 @@ namespace bot
 {
     internal class GenericDialogue : IDialogue
     {
-        public bool Update(SocketMessage msg)
+        public DialogueStatus Update(SocketMessage msg)
         {
             if (msg.Content == "Exit")
             {
                 msg.Channel.SendMessageAsync("Exiting the dialogue.");
-                return true;
+                return DialogueStatus.Finished;
             }
 
             msg.Channel.SendMessageAsync("The dialogue is still going.");
 
-            return false;
+            return DialogueStatus.Finished;
         }
     }
 }

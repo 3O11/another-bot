@@ -19,17 +19,5 @@ namespace bot
             var channel = msg.Channel as SocketGuildChannel;
             return channel.Guild;
         }
-
-        public static List<string> GetUsernames(List<ulong> userIds)
-        {
-            List<string> result = new();
-
-            foreach(var userId in userIds)
-            {
-
-            }
-
-            return result;
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace bot
         {
             if (_activeDialogues.TryGetValue(msg.RawMsg.Channel.Id, out var dialogue))
             {
-                if (dialogue.Update(msg.RawMsg))
+                if (dialogue.Update(msg.RawMsg) == DialogueStatus.Finished)
                 {
                     _activeDialogues.TryRemove(msg.RawMsg.Channel.Id, out var _);
                 }
