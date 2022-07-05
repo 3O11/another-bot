@@ -19,5 +19,30 @@ namespace bot
             var channel = msg.Channel as SocketGuildChannel;
             return channel.Guild;
         }
+
+        public static List<ulong>? ExtractIds(string str)
+        {
+            List<ulong>? ids = new();
+            ulong buffer = 0;
+            foreach (char ch in str)
+            {
+                if (ch >= '0' && ch <= '9')
+                {
+                    buffer = (buffer * 10) + (ulong)(ch - '0');
+                }
+                else if (buffer != 0)
+                {
+                    ids.Add(buffer);
+                    buffer = 0;
+                }
+            }
+
+            if (buffer != 0)
+            {
+                ids.Add(buffer);
+            }
+
+            return ids.Count > 0 ? ids : null;
+        }
     }
 }

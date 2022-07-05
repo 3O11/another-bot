@@ -17,7 +17,7 @@ namespace bot
 
             _currentState = _transitionFunc[_currentState](_currentState, msg);
 
-            if (_currentState == "final") return DialogueStatus.Continue;
+            if (_currentState == "final") return DialogueStatus.Finished;
             if (_currentState == "error") return DialogueStatus.Error;
 
             return DialogueStatus.Continue;
