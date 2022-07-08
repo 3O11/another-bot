@@ -7,10 +7,16 @@ using Discord.WebSocket;
 
 namespace bot
 {
-    internal class DialogueStateMachine : IDialogue
+    internal class DialogueBase : IDialogue
     {
         public DialogueStatus Update(SocketMessage msg)
         {
+            if (msg.Content == "terminate")
+            {
+                msg.Channel.SendMessageAsync("Terminating the dialogue");
+                return DialogueStatus.Finished;
+            }
+
             // This is here in case the dialogue does not get terminated
             // right after finishing/encountering an error.
             if (_currentState == "error" || _currentState == "final") return DialogueStatus.Error;

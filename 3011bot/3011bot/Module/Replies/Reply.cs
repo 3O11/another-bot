@@ -76,6 +76,16 @@ namespace bot
             _trigger = trigger;
         }
 
+        public void SetMatchCondition(ReplyMatchCondition condition)
+        {
+            _condition = condition;
+        }
+
+        public void SetChannels(List<ulong>? channels)
+        {
+            _channels = channels != null ? new(channels) : new();
+        }
+
         public bool AddChannel(ulong channelId)
         {
             lock(_replyLock)
@@ -90,6 +100,11 @@ namespace bot
             {
                 return _channels.Remove(channelId);
             }
+        }
+
+        public void SetUsers(List<ulong>? users)
+        {
+            _users = users != null ? new(users) : new();
         }
 
         public bool AddUser(ulong userId)
@@ -111,37 +126,39 @@ namespace bot
         public override string ToString()
         {
             StringBuilder str = new();
-
-            str.Append("Trigger:\n");
-            str.Append(_trigger);
-            str.Append("\n\n");
-            str.Append("Reply:\n");
-            str.Append(_reply);
-            str.Append("\n\n");
-            str.Append("Reply to (user IDs [WIP]):\n");
-            if (_users.Count > 0)
+            lock(_replyLock)
             {
-                foreach (var userId in _users) str.Append(userId.ToString() + "\n");
+                str.Append("**Trigger:**\n");
+                str.Append(_trigger);
+                str.Append("\n\n");
+                str.Append("**Reply:**\n");
+                str.Append(_reply);
+                str.Append("\n\n");
+                str.Append("**Reply to** (user IDs)**:**\n");
+                if (_users.Count > 0)
+                {
+                    foreach (var userId in _users) str.Append(userId.ToString() + "\n");
+                }
+                else
+                {
+                    str.Append("everyone\n");
+                }
+                str.Append("\n");
+                str.Append("**Reply in** (channel IDs)**:**\n");
+                if (_channels.Count > 0)
+                {
+                    foreach (var channelId in _channels) str.Append(channelId.ToString() + "\n");
+                }
+                else
+                {
+                    str.Append("anywhere\n");
+                }
+                str.Append("\n");
+                str.Append("**Match type:**\n" + _condition.ToString() + "\n\n");
+                str.Append("**ID:**\n");
+                str.Append("`" + Id.ToString() + "`");
+                str.Append("\n");
             }
-            else
-            {
-                str.Append("everyone\n");
-            }
-            str.Append("\n");
-            str.Append("Reply in (channel IDs [WIP]:\n");
-            if (_channels.Count > 0)
-            {
-                foreach (var channelId in _channels) str.Append(channelId.ToString() + "\n");
-            }
-            else
-            {
-                str.Append("anywhere\n");
-            }
-            str.Append("\n");
-            str.Append("Trigger match type:\n" + _condition.ToString() + "\n\n");
-            str.Append("ID:\n");
-            str.Append(Id.ToString());
-            str.Append("\n");
 
             return str.ToString();
         }

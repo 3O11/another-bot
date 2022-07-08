@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace bot
 {
-    internal class UtilitiesModule : DialogueModuleBase
+    internal class UtilitiesModule : ModuleBase
     {
         public UtilitiesModule()
         {
-            Name = "utils";
-        }
-
-        public override string GetHelp()
-        {
-            throw new NotImplementedException();
+            Keyword = "utils";
         }
 
         public override bool ProcessCommandsExt(MessageWrapper msg)
@@ -28,8 +23,6 @@ namespace bot
             }
             else if (msg.Content == "testDialogue")
             {
-                //msg.RawMsg.Channel.SendMessageAsync("Starting generic dialogue");
-                //addDialogue(msg.RawMsg.Channel.Id, new GenericDialogue());
                 addTestDialogue(msg);
                 return true;
             }
@@ -39,11 +32,12 @@ namespace bot
 
         void addTestDialogue(MessageWrapper msg)
         {
-            DialogueStateMachine dialogue = new();
+            DialogueBase dialogue = new();
 
             dialogue.AddTransition(
                 "start",
-                (string state, SocketMessage msg) => {
+                (string state, SocketMessage msg) =>
+                {
                     msg.Channel.SendMessageAsync("Starting the dialogue");
                     return "test1";
                 }
@@ -51,7 +45,8 @@ namespace bot
 
             dialogue.AddTransition(
                 "test1",
-                (string state, SocketMessage msg) => {
+                (string state, SocketMessage msg) =>
+                {
                     msg.Channel.SendMessageAsync("State test1");
                     return "test2";
                 }
@@ -59,7 +54,8 @@ namespace bot
 
             dialogue.AddTransition(
                 "test2",
-                (string state, SocketMessage msg) => {
+                (string state, SocketMessage msg) =>
+                {
                     if (msg.Content == "repeat")
                     {
                         msg.Channel.SendMessageAsync("State test2, Returning to state test1");
@@ -73,14 +69,15 @@ namespace bot
 
             dialogue.AddTransition(
                 "test3",
-                (string state, SocketMessage msg) => {
+                (string state, SocketMessage msg) =>
+                {
                     msg.Channel.SendMessageAsync("State test3, terminating Dialogue");
                     return "final";
                 }
             );
 
             dialogue.Update(msg.RawMsg);
-            addDialogue(msg.RawMsg.Channel.Id, dialogue);
+            AddDialogue(msg.RawMsg.Channel.Id, dialogue);
         }
     }
 }

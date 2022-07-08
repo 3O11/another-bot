@@ -15,7 +15,7 @@ namespace bot
 			var bot = new Bot("3022", "Insert your token here.");
 
 			// Add modules
-			bot.AddModule(new RepliesModule());
+			bot.AddModule(ReplyModule.MakeModule("reply"));
 			bot.AddModule(new UtilitiesModule());
 
 			bot.Start();
