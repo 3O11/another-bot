@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using System.Collections.Generic;
 
 namespace bot
 {
@@ -10,5 +11,6 @@ namespace bot
         bool ProcessCommands(MessageWrapper msg);
         bool ProcessTriggers(MessageWrapper msg);
         string GetHelpString(string commandKeyword = "");
+        string GetCommandNames();
     }
 }

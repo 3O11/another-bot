@@ -44,5 +44,11 @@ namespace bot
 
             return ids.Count > 0 ? ids : null;
         }
+
+        public static string ExtractFirstKeyword(string str)
+        {
+            int spacePos = str.IndexOf(' ');
+            return str.Substring(0, spacePos < 0 ? str.Length : spacePos);
+        }
     }
 }

@@ -105,6 +105,18 @@ namespace bot
             }
         }
 
+        public virtual string GetCommandNames()
+        {
+            StringBuilder names = new();
+
+            foreach (var commandName in _commands.Keys)
+            {
+                names.AppendLine(commandName);
+            }
+
+            return names.ToString();
+        }
+
         // This is currently in the process of being removed, it will be removed fully soon.
         public virtual bool ProcessCommandsExt(MessageWrapper msg)
         {
