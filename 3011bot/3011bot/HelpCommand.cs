@@ -26,10 +26,15 @@ namespace bot
                 "\n" +
                 "This command provides information on all the commands that are included " +
                 "in this bot (all of them are written down below).\n" +
-                "Note #1: <cmdname> needs to include the (space separated) module " +
+                "Note #1: cmdname needs to include the (space separated) module " +
                 "qualifier.\n" +
                 "Note #2: These help notes use angle brackets `<>` for required parameters " +
-                "and square brackets `[]` for optional parameters";
+                "and square brackets `[]` for optional parameters\n" +
+                "Note #3: Command names are sequences of keywords separated *strictly* by " +
+                "a single space.\n" +
+                "Note #4: Usage hints may seem weird in the way they do not specify the exact " +
+                "bot name or module name, using <botname> or some canonical name. That is because " +
+                "of the possibility of renaming the modules.";
         }
 
         public bool Execute(MessageWrapper msg)

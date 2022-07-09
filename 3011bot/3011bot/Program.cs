@@ -12,7 +12,7 @@ namespace bot
 
 		public async Task MainAsync()
 		{
-			var bot = new Bot("3022", "Insert your token here.");
+			var bot = new Bot("3011", "Insert your token here.");
 
 			bot.AddCommand(new HelpCommand(bot));
 			bot.AddModule(ReplyModule.MakeModule("reply"));
