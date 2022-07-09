@@ -170,7 +170,7 @@ namespace bot
                 {
                     if (Guid.TryParse(msg.Content, out var replyId))
                     {
-                        if (d.replyModule.TryGetReply(Utils.GetGuild(msg).Id, replyId, out var reply))
+                        if (d.replyModule.TryGetReply(Utils.GetGuild(msg).Id, replyId, out var reply) && reply != null)
                         {
                             d.reply = reply;
                             msg.Channel.SendMessageAsync("Reply selected, specify which value you'd like to modify [trigger, reply, matchCondition, users, channels]");

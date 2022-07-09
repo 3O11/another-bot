@@ -14,9 +14,14 @@ namespace bot
             _bot = bot;
         }
 
-        public string Keyword { get => "help"; }
+        public string Keyword
+        { 
+            get => "help"; 
+        }
 
-        public string HelpText { get => 
+        public string HelpText
+        {
+            get => 
                 "Usage: <botname> help [cmdname]\n" +
                 "\n" +
                 "This command provides information on all the commands that are included " +

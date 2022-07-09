@@ -55,11 +55,6 @@ namespace bot
                     if (command.Execute(msg)) return true;
                 }
 
-                if (!ProcessCommandsExt(msg))
-                {
-                    msg.RawMsg.Channel.SendMessageAsync("Unknown command for this module.");
-                }
-
                 return true;
             }
 
@@ -115,12 +110,6 @@ namespace bot
             }
 
             return names.ToString();
-        }
-
-        // This is currently in the process of being removed, it will be removed fully soon.
-        public virtual bool ProcessCommandsExt(MessageWrapper msg)
-        {
-            return false;
         }
 
         public void AddDialogue(ulong channelId, IDialogue dialogue)

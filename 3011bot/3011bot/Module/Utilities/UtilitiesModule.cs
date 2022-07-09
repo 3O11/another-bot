@@ -9,27 +9,25 @@ namespace bot
 {
     internal class UtilitiesModule : ModuleBase
     {
-        public UtilitiesModule()
+        UtilitiesModule(string keyword)
         {
-            Keyword = "utils";
+            Keyword = keyword;
         }
 
-        public override bool ProcessCommandsExt(MessageWrapper msg)
+        public static UtilitiesModule MakeModule(string keyword)
         {
-            if (msg.Content == "ping")
-            {
-                msg.RawMsg.Channel.SendMessageAsync("Pong!");
-                return true;
-            }
-            else if (msg.Content == "testDialogue")
-            {
-                addTestDialogue(msg);
-                return true;
-            }
+            var module = new UtilitiesModule(keyword);
 
-            return false;
+            module._moduleDescription =
+                "This module contains various assorted commands " +
+                "that don't really have anything in common.";
+
+            module.AddCommand(new PingCommand());
+
+            return module;
         }
 
+        // This is still here temporarily, I'll move/remove it later
         void addTestDialogue(MessageWrapper msg)
         {
             DialogueBase dialogue = new();

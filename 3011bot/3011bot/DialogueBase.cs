@@ -41,7 +41,7 @@ namespace bot
             _transitionFunc[startState] = transition;
         }
 
-        string _currentState = "start";
+        protected string _currentState = "start";
         Dictionary<string, Func<string, SocketMessage, string>> _transitionFunc = new();
     }
 }

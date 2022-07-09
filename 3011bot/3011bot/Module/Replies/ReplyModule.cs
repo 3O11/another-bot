@@ -19,6 +19,12 @@ namespace bot
         {
             var module = new ReplyModule(keyword);
 
+            module._moduleDescription =
+                "This module implements the reply functionality, " +
+                "you can make the bot reply to messages, users and in " +
+                "channels of your choosing. Use the commands below to " +
+                "set up the replies you want.";
+
             module.AddCommand(new AddReplyCommand(module));
             module.AddCommand(new RemoveReplyCommand(module));
             module.AddCommand(new ModifyReplyCommand(module));
