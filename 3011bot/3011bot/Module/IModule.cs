@@ -1,8 +1,4 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System.Collections.Generic;
-
-namespace bot
+﻿namespace bot
 {
     internal interface IModule
     {
