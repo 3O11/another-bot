@@ -21,7 +21,14 @@ namespace bot
             // right after finishing/encountering an error.
             if (_currentState == "error" || _currentState == "final") return DialogueStatus.Error;
 
-            _currentState = _transitionFunc[_currentState](_currentState, msg);
+            if (_transitionFunc.TryGetValue(_currentState, out var func))
+            {
+                _currentState = func(_currentState, msg);
+            }
+            else
+            {
+                msg.Channel.SendMessageAsync("The dialogue is broken, please report this issue to the author.");
+            }
 
             if (_currentState == "final") return DialogueStatus.Finished;
             if (_currentState == "error") return DialogueStatus.Error;

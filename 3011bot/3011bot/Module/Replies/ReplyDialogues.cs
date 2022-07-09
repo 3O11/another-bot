@@ -48,21 +48,21 @@ namespace bot
                 {
                     switch (msg.Content)
                     {
-                        case "any":
-                            d.matchCondition = ReplyMatchCondition.Any;
-                            break;
-                        case "full":
-                            d.matchCondition = ReplyMatchCondition.Full;
-                            break;
-                        case "startsWith":
-                            d.matchCondition = ReplyMatchCondition.StartsWith;
-                            break;
-                        case "endsWith":
-                            d.matchCondition = ReplyMatchCondition.EndsWith;
-                            break;
-                        default:
-                            msg.Channel.SendMessageAsync("The match type was not recognized, please try again.");
-                            return "matchType";
+                    case "any":
+                        d.matchCondition = ReplyMatchCondition.Any;
+                        break;
+                    case "full":
+                        d.matchCondition = ReplyMatchCondition.Full;
+                        break;
+                    case "startsWith":
+                        d.matchCondition = ReplyMatchCondition.StartsWith;
+                        break;
+                    case "endsWith":
+                        d.matchCondition = ReplyMatchCondition.EndsWith;
+                        break;
+                    default:
+                        msg.Channel.SendMessageAsync("The match type was not recognized, please try again.");
+                        return "matchType";
                     }
 
                     msg.Channel.SendMessageAsync("Specify reply body");
@@ -268,7 +268,7 @@ namespace bot
                         if (userIds == null)
                         {
                             msg.Channel.SendMessageAsync("No valid IDs have been found, please try again or specify `everyone` explicitly");
-                            return "userIds";
+                            return "users";
                         }
                         d.reply.SetUsers(userIds);
                     }
@@ -292,7 +292,7 @@ namespace bot
                         if (channelIds == null)
                         {
                             msg.Channel.SendMessageAsync("No valid IDs have been found, please try again or specify `anywhere` explicitly");
-                            return "channelIds";
+                            return "channels";
                         }
                         d.reply.SetChannels(channelIds);
                     }

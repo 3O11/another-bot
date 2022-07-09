@@ -29,7 +29,7 @@ namespace bot
 
         public AddReplyCommand(ReplyModule replyModule)
             : base("add", helpText, replyModule)
-        {}
+        { }
 
         public override bool Execute(MessageWrapper msg)
         {
