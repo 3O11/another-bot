@@ -16,7 +16,7 @@ namespace bot
 
 			bot.AddCommand(new HelpCommand(bot));
 			bot.AddModule(ReplyModule.MakeModule("reply"));
-			bot.AddModule(new UtilitiesModule());
+			bot.AddModule(UtilitiesModule.MakeModule("utils"));
 
 			bot.Start();
 

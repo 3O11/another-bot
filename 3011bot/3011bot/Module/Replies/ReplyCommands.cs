@@ -25,7 +25,10 @@ namespace bot
 
     internal class AddReplyCommand : ReplyCommand
     {
-        private static string helpText = "[WIP]";
+        private static string helpText =
+            "Usage: <botname> <reply> add\n" +
+            "\n" +
+            "Starts a dialogue with which you can set up a new reply.";
 
         public AddReplyCommand(ReplyModule replyModule)
             : base("add", helpText, replyModule)
@@ -33,16 +36,27 @@ namespace bot
 
         public override bool Execute(MessageWrapper msg)
         {
-            var dialogue = ReplyAddDialogue.MakeDialogue(_replyModule);
-            dialogue.Update(msg.RawMsg);
-            _replyModule.AddDialogue(msg.RawMsg.Channel.Id, dialogue);
+            if (msg.Content == "")
+            {
+                var dialogue = ReplyAddDialogue.MakeDialogue(_replyModule);
+                dialogue.Update(msg.RawMsg);
+                _replyModule.AddDialogue(msg.RawMsg.Channel.Id, dialogue);
+            }
+            else
+            {
+                msg.RawMsg.Channel.SendMessageAsync("This command takes no arguments.");
+            }
+
             return true;
         }
     }
 
     internal class RemoveReplyCommand : ReplyCommand
     {
-        private static string helpText = "[WIP]";
+        private static string helpText =
+            "Usage: <botname> <reply> remove <Reply ID>\n" +
+            "\n" +
+            "Permanently removes the reply specified by the ID.";
 
         public RemoveReplyCommand(ReplyModule replyModule)
             : base("remove", helpText, replyModule)
@@ -69,7 +83,10 @@ namespace bot
 
     internal class ModifyReplyCommand : ReplyCommand
     {
-        private static string helpText = "[WIP]";
+        private static string helpText =
+            "Usage: <botname> <reply> modify\n" +
+            "\n" +
+            "Starts a dialogue that will guide through modifying an existing reply.";
 
         public ModifyReplyCommand(ReplyModule replyModule)
             : base("modify", helpText, replyModule)
@@ -77,16 +94,26 @@ namespace bot
 
         public override bool Execute(MessageWrapper msg)
         {
-            var dialogue = ReplyModifyDialogue.MakeDialogue(_replyModule);
-            dialogue.Update(msg.RawMsg);
-            _replyModule.AddDialogue(msg.RawMsg.Channel.Id, dialogue);
+            if (msg.Content == "")
+            {
+                var dialogue = ReplyModifyDialogue.MakeDialogue(_replyModule);
+                dialogue.Update(msg.RawMsg);
+                _replyModule.AddDialogue(msg.RawMsg.Channel.Id, dialogue);
+            }
+            else
+            {
+                msg.RawMsg.Channel.SendMessageAsync("This command takes no arguments.");
+            }
             return true;
         }
     }
 
     internal class ListReplyCommand : ReplyCommand
     {
-        private static string helpText = "[WIP]";
+        private static string helpText =
+            "Usage: <botname> <reply> list\n" +
+            "\n" +
+            "Lists all IDs of replies that have been registered on this server.";
 
         public ListReplyCommand(ReplyModule replyModule)
             : base("list", helpText, replyModule)
@@ -94,6 +121,11 @@ namespace bot
 
         public override bool Execute(MessageWrapper msg)
         {
+            if (msg.Content != "")
+            {
+                msg.RawMsg.Channel.SendMessageAsync("This command takes no arguments.");
+            }
+
             List<Guid> replyIds = _replyModule.GetReplyIds(Utils.GetGuild(msg.RawMsg).Id);
 
             if (replyIds.Count == 0)
@@ -122,7 +154,10 @@ namespace bot
 
     internal class InfoReplyCommand : ReplyCommand
     {
-        private static string helpText = "[WIP]";
+        private static string helpText =
+            "Usage: <botname> <reply> info <Reply ID>\n" +
+            "\n" +
+            "Displays all information about an existing reply.";
 
         public InfoReplyCommand(ReplyModule replyModule)
             : base("info", helpText, replyModule)
