@@ -27,14 +27,15 @@
                 "a single space.\n" +
                 "Note #4: Usage hints may seem weird in the way they do not specify the exact " +
                 "bot name or module name, using <botname> or some canonical name. That is because " +
-                "of the possibility of renaming the modules.";
+                "of the possibility of renaming the modules.\n" +
+                "Note #5: All dialogues can be immediately ended by the `terminate` keyword.";
         }
 
         public bool Execute(MessageWrapper msg)
         {
             if (msg.Content == "")
             {
-                msg.RawMsg.Channel.SendMessageAsync(HelpText + "\n\n" + _bot.GetHelpMessage(""));
+                msg.RawMsg.Channel.SendMessageAsync(HelpText + "\n\n" + _bot.GetHelpString(""));
             }
             else if (msg.Content == "help")
             {
@@ -42,7 +43,7 @@
             }
             else
             {
-                msg.RawMsg.Channel.SendMessageAsync(_bot.GetHelpMessage(msg.Content));
+                msg.RawMsg.Channel.SendMessageAsync(_bot.GetHelpString(msg.Content));
             }
             return true;
         }

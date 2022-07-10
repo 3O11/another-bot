@@ -50,6 +50,14 @@ namespace bot
                     msg.BumpOffset(offset + (spacePos < 0 ? 0 : 1));
                     if (command.Execute(msg)) return true;
                 }
+                else if (commandKeyword == "")
+                {
+                    msg.RawMsg.Channel.SendMessageAsync("Missing command keyword.");
+                }
+                else
+                {
+                    msg.RawMsg.Channel.SendMessageAsync("This module does not contain this command.");
+                }
 
                 return true;
             }

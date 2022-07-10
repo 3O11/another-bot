@@ -140,7 +140,7 @@ namespace bot
                     serializedIds.AppendLine(replyId.ToString());
                 }
                 serializedIds.AppendLine("```");
-                serializedIds.AppendLine("(This command lists only reply IDs, for more information, use `3022 reply info <Reply ID>`)");
+                serializedIds.AppendLine("(This command lists only reply IDs, for more information, use `<botname> <reply> info <Reply ID>`)");
 
                 msg.RawMsg.Channel.SendMessageAsync(serializedIds.ToString());
             }

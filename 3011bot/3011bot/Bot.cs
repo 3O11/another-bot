@@ -35,7 +35,7 @@ namespace bot
         }
 
         // This feels a bit out of place here, I'll have to think about this later.
-        public string GetHelpMessage(string keyword)
+        public string GetHelpString(string keyword)
         {
             if (keyword == "")
             {
@@ -95,6 +95,9 @@ namespace bot
                 if (msg.Author.IsBot) 
                     return;
 
+                if (msg.Channel is ISocketPrivateChannel)
+                    return;
+
                 // Evaluate message
                 var wrappedMsg = new MessageWrapper(msg, msg.Content.StartsWith(Name + " ") ? Name.Length + 1 : 0);
                 foreach (var module in _modules.Values)
@@ -102,18 +105,21 @@ namespace bot
                     if (module.ProcessDialogues(wrappedMsg)) return;
                 }
 
-                int spacePos = msg.Content.IndexOf(' ', wrappedMsg.Offset);
-                var keyword = msg.Content.Substring(wrappedMsg.Offset, (spacePos < 0 ? msg.Content.Length : spacePos) - wrappedMsg.Offset);
-                if (_commands.TryGetValue(keyword, out var command))
+                if (msg.Content.StartsWith(Name))
                 {
-                    wrappedMsg.BumpOffset(keyword.Length + (msg.Content.Length == keyword.Length ? 0 : 1));
-                    command.Execute(wrappedMsg);
-                    return;
-                }
-                if (_modules.TryGetValue(keyword, out var commModule))
-                {
-                    commModule.ProcessCommands(wrappedMsg);
-                    return;
+                    int spacePos = msg.Content.IndexOf(' ', wrappedMsg.Offset);
+                    var keyword = msg.Content.Substring(wrappedMsg.Offset, (spacePos < 0 ? msg.Content.Length : spacePos) - wrappedMsg.Offset);
+                    if (_commands.TryGetValue(keyword, out var command))
+                    {
+                        wrappedMsg.BumpOffset(keyword.Length + (msg.Content.Length == keyword.Length ? 0 : 1));
+                        command.Execute(wrappedMsg);
+                        return;
+                    }
+                    if (_modules.TryGetValue(keyword, out var commModule))
+                    {
+                        commModule.ProcessCommands(wrappedMsg);
+                        return;
+                    }
                 }
 
                 foreach (var module in _modules.Values)
