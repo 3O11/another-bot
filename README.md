@@ -9,7 +9,7 @@ the auto-reply functionality and (hopefully) very easy extensibility.
 
 ## What is planned for the future?
 
-There are many things that should be improved on the bot. Here are some of them
+There are many things that chould be improved on the bot. Here are some of them
 in no particular order.
 
 - Improve the command parser
@@ -58,9 +58,9 @@ An implementation of a dialogue system based on state machines is provided. It
 is entirely dynamic, as in, the programmer provides a transition function with
 all the state transitions that they want, and let the base implementation deal
 with everything else. The states are identified by strings of characters. The
-state transition are provided in the form of lambda functions, so to keep some
-kind of state between the transitions, all the persistent values need to be
-directly in the class that holds the function.
+state transition are provided in the form of lambda functions, so as to keep
+some kind of state between the transitions, all the persistent values need to
+be directly in the class that holds the function.
 
 - All dialogues can be ended by the `terminate` keyword, regardless of the
 user-provided transition function (as long as the implementation inherits
@@ -88,7 +88,8 @@ manners of things (at the cost of performance).
 From the way the code is written, it will be painfully obvious that performance
 was not the main focus in this codebase, the focus was on making the program
 structure as well-written and extensible as possible. The reason for this is
-that the code is mostly bound by network communication instead of hot paths.
+that the code is mostly bound by network communication instead of inefficiencies
+on the hot path.
 
 #### Other notes
 
@@ -102,3 +103,11 @@ there is the protected `_moduleDescription` field in the `ModuleBase` class.
 
 - `Utils` contain some additional helper functions that did not fit anywhere
 else.
+
+- The current plan for better data storage in modules is to make a generic
+"per-server" data structure that will also automatically take care of
+serialization and deserialization. (In reality, it will only be a thin
+wrapper on top of the existing `ConcurrentDictionary` implementation, with
+some better abstraction of the internal `List`, ideally replaced with a more
+suitable data structure.) The ideal solution would probably be to use a
+database for the storage.
