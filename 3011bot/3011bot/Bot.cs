@@ -107,8 +107,7 @@ namespace bot
 
                 if (msg.Content.StartsWith(Name))
                 {
-                    int spacePos = msg.Content.IndexOf(' ', wrappedMsg.Offset);
-                    var keyword = msg.Content.Substring(wrappedMsg.Offset, (spacePos < 0 ? msg.Content.Length : spacePos) - wrappedMsg.Offset);
+                    string keyword = Utils.ExtractFirstKeyword(msg.Content, wrappedMsg.Offset);
                     if (_commands.TryGetValue(keyword, out var command))
                     {
                         wrappedMsg.BumpOffset(keyword.Length + (msg.Content.Length == keyword.Length ? 0 : 1));

@@ -11,7 +11,8 @@ namespace bot
         {
             if (_activeDialogues.TryGetValue(msg.RawMsg.Channel.Id, out var dialogue))
             {
-                if (dialogue.Update(msg.RawMsg) == DialogueStatus.Finished)
+                var status = dialogue.Update(msg.RawMsg);
+                if (status == DialogueStatus.Finished || status == DialogueStatus.Error)
                 {
                     _activeDialogues.TryRemove(msg.RawMsg.Channel.Id, out var _);
                 }
@@ -42,12 +43,10 @@ namespace bot
                     return false;
                 }
 
-                int spacePos = msg.Content.IndexOf(' ');
-                int offset = spacePos < 0 ? msg.Content.Length : spacePos;
-                string commandKeyword = msg.Content.Substring(0, offset);
+                string commandKeyword = Utils.ExtractFirstKeyword(msg.Content);
                 if (_commands.TryGetValue(commandKeyword, out var command))
                 {
-                    msg.BumpOffset(offset + (spacePos < 0 ? 0 : 1));
+                    msg.BumpOffset(commandKeyword.Length + (commandKeyword.Length == msg.Content.Length ? 0 : 1));
                     if (command.Execute(msg)) return true;
                 }
                 else if (commandKeyword == "")

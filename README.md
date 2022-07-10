@@ -17,6 +17,7 @@ in no particular order.
 - Simplify IModule
 - Make the replies persistent between restarts of the bot
 - Move settings to a separate file
+- Improve Dialogue error handling
 
 ## Documentation
 
@@ -67,6 +68,10 @@ user-provided transition function (as long as the implementation inherits
 `DialogueBase`).
 - The `IDialogue` interface is deliberately kept very simple to enable
 different styles of dialogue implementation.
+- There are three special states for the `DialogueBase` implementation, first
+there is `start`, that is the state that gets executed first. Then there is
+`final`, which ends the dialogue. Finally, there is an `error` state, which
+signifies that something inside the dialogue has gone wrong.
 
 #### Reply implementation
 

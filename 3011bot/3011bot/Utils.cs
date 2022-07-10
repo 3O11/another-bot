@@ -41,10 +41,10 @@ namespace bot
             return ids.Count > 0 ? ids : null;
         }
 
-        public static string ExtractFirstKeyword(string str)
+        public static string ExtractFirstKeyword(string str, int offset = 0)
         {
-            int spacePos = str.IndexOf(' ');
-            return str.Substring(0, spacePos < 0 ? str.Length : spacePos);
+            int spacePos = str.IndexOf(' ', offset);
+            return str.Substring(offset, (spacePos < 0 ? str.Length : spacePos) - offset);
         }
     }
 }
