@@ -1,4 +1,4 @@
-# another-bot
+# bot
 
 A discord bot made for automatic replies, written in C#.
 
