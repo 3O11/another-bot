@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
 using Discord.WebSocket;
 
 // It might be overkill to use Guids here, but it is a more reliable and faster
@@ -19,7 +18,7 @@ namespace bot
 
     internal class Reply
     {
-        public Reply(string trigger, string? reply, ReplyMatchCondition match, HashSet<ulong>? channelIds = null, HashSet<ulong>? userIds = null)
+        public Reply(string? trigger, string reply, ReplyMatchCondition match, HashSet<ulong>? channelIds = null, HashSet<ulong>? userIds = null)
         {
             Id = Guid.NewGuid();
             _trigger = trigger;
@@ -55,23 +54,26 @@ namespace bot
             {
                 bool shouldReply = true;
 
-                switch (_condition)
+                if (_trigger != null)
                 {
-                    case ReplyMatchCondition.Full:
-                        shouldReply = (msg.Content == _trigger);
-                        break;
-                    case ReplyMatchCondition.Any:
-                        shouldReply = msg.Content.Contains(_trigger);
-                        break;
-                    case ReplyMatchCondition.StartsWith:
-                        shouldReply = msg.Content.StartsWith(_trigger);
-                        break;
-                    case ReplyMatchCondition.EndsWith:
-                        shouldReply = msg.Content.EndsWith(_trigger);
-                        break;
-                    default:
-                        shouldReply = false;
-                        break;
+                    switch (_condition)
+                    {
+                        case ReplyMatchCondition.Full:
+                            shouldReply = (msg.Content == _trigger);
+                            break;
+                        case ReplyMatchCondition.Any:
+                            shouldReply = msg.Content.Contains(_trigger);
+                            break;
+                        case ReplyMatchCondition.StartsWith:
+                            shouldReply = msg.Content.StartsWith(_trigger);
+                            break;
+                        case ReplyMatchCondition.EndsWith:
+                            shouldReply = msg.Content.EndsWith(_trigger);
+                            break;
+                        default:
+                            shouldReply = false;
+                            break;
+                    }
                 }
 
                 shouldReply &= _users.Count > 0 ? _users.Contains(msg.Author.Id) : true;
@@ -150,7 +152,14 @@ namespace bot
             lock(_replyLock)
             {
                 str.Append("**Trigger:**\n");
-                str.Append(_trigger);
+                if (_trigger == null)
+                {
+                    str.Append("everything");
+                }
+                else
+                {
+                    str.Append(_trigger);
+                }
                 str.Append("\n\n");
                 str.Append("**Reply:**\n");
                 str.Append(_reply);
@@ -193,13 +202,13 @@ namespace bot
         }
 
         public Guid Id { get; init; }
-        private string? _reply;
-        private string _trigger;
+        private string _reply;
+        private string? _trigger;
         private ReplyMatchCondition _condition;
         private HashSet<ulong> _channels;
         private HashSet<ulong> _users;
         private readonly object _replyLock = new();
     }
 
-    internal record class ReplyRecord(Guid Id, string? Reply, string Trigger, ReplyMatchCondition Condition, HashSet<ulong> Channels, HashSet<ulong> Users);
+    internal record class ReplyRecord(Guid Id, string Reply, string? Trigger, ReplyMatchCondition Condition, HashSet<ulong> Channels, HashSet<ulong> Users);
 }

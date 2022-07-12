@@ -24,7 +24,7 @@ namespace bot
                 "start",
                 (string state, SocketMessage msg) =>
                 {
-                    msg.Channel.SendMessageAsync("Specify trigger");
+                    msg.Channel.SendMessageAsync("Specify trigger, type `everything` to make the bot respond to everything.");
                     return "trigger";
                 }
             );
@@ -33,8 +33,15 @@ namespace bot
                 "trigger",
                 (string state, SocketMessage msg) =>
                 {
-                    d.trigger = msg.Content;
-
+                    if (msg.Content == "everything")
+                    {
+                        d.trigger = null;
+                    }
+                    else
+                    {
+                        d.trigger = msg.Content;
+                    }
+                    
                     msg.Channel.SendMessageAsync("Specify match type [any, full, startsWith, endsWith]");
                     return "matchType";
                 }
@@ -134,7 +141,7 @@ namespace bot
             return d;
         }
 
-        string trigger { get; set; }
+        string? trigger { get; set; }
         string reply { get; set; }
         ReplyMatchCondition matchCondition { get; set; }
         List<ulong>? userIds { get; set; }
