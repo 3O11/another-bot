@@ -15,13 +15,12 @@
                 "Replies with Pong!";
         }
 
-        public bool Execute(MessageWrapper msg)
+        public void Execute(MessageWrapper msg)
         {
             if (msg.Content == "")
             {
                 msg.RawMsg.Channel.SendMessageAsync("Pong!");
             }
-            return true;
         }
     }
 }

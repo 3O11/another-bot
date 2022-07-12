@@ -15,7 +15,7 @@ namespace bot
 
         public string Keyword { get; init; }
         public string HelpText { get; init; }
-        public abstract bool Execute(MessageWrapper msg);
+        public abstract void Execute(MessageWrapper msg);
 
         protected ReplyModule _replyModule;
     }
@@ -25,13 +25,14 @@ namespace bot
         private static string helpText =
             "Usage: <botname> <reply> add\n" +
             "\n" +
+            "Takes no parameters.\n" +
             "Starts a dialogue with which you can set up a new reply.";
 
         public AddReplyCommand(ReplyModule replyModule)
             : base("add", helpText, replyModule)
         { }
 
-        public override bool Execute(MessageWrapper msg)
+        public override void Execute(MessageWrapper msg)
         {
             if (msg.Content == "")
             {
@@ -43,8 +44,6 @@ namespace bot
             {
                 msg.RawMsg.Channel.SendMessageAsync("This command takes no arguments.");
             }
-
-            return true;
         }
     }
 
@@ -53,13 +52,14 @@ namespace bot
         private static string helpText =
             "Usage: <botname> <reply> remove <Reply ID>\n" +
             "\n" +
+            "Takes a single required parameter in the form of a GUID.\n" +
             "Permanently removes the reply specified by the ID.";
 
         public RemoveReplyCommand(ReplyModule replyModule)
             : base("remove", helpText, replyModule)
         { }
 
-        public override bool Execute(MessageWrapper msg)
+        public override void Execute(MessageWrapper msg)
         {
             if (!Guid.TryParse(msg.Content, out var guid))
             {
@@ -73,8 +73,6 @@ namespace bot
             {
                 msg.RawMsg.Channel.SendMessageAsync("There is no reply with this ID.");
             }
-
-            return true;
         }
     }
 
@@ -83,13 +81,14 @@ namespace bot
         private static string helpText =
             "Usage: <botname> <reply> modify\n" +
             "\n" +
+            "Takes no parameters.\n" +
             "Starts a dialogue that will guide through modifying an existing reply.";
 
         public ModifyReplyCommand(ReplyModule replyModule)
             : base("modify", helpText, replyModule)
         { }
 
-        public override bool Execute(MessageWrapper msg)
+        public override void Execute(MessageWrapper msg)
         {
             if (msg.Content == "")
             {
@@ -101,7 +100,6 @@ namespace bot
             {
                 msg.RawMsg.Channel.SendMessageAsync("This command takes no arguments.");
             }
-            return true;
         }
     }
 
@@ -110,13 +108,14 @@ namespace bot
         private static string helpText =
             "Usage: <botname> <reply> list\n" +
             "\n" +
+            "Takes no parameters.\n" +
             "Lists all IDs of replies that have been registered on this server.";
 
         public ListReplyCommand(ReplyModule replyModule)
             : base("list", helpText, replyModule)
         { }
 
-        public override bool Execute(MessageWrapper msg)
+        public override void Execute(MessageWrapper msg)
         {
             if (msg.Content != "")
             {
@@ -144,8 +143,6 @@ namespace bot
 
                 msg.RawMsg.Channel.SendMessageAsync(serializedIds.ToString());
             }
-
-            return true;
         }
     }
 
@@ -154,19 +151,20 @@ namespace bot
         private static string helpText =
             "Usage: <botname> <reply> info <Reply ID>\n" +
             "\n" +
+            "Takes a single required parameter in the form of a GUID.\n" +
             "Displays all information about an existing reply.";
 
         public InfoReplyCommand(ReplyModule replyModule)
             : base("info", helpText, replyModule)
         { }
 
-        public override bool Execute(MessageWrapper msg)
+        public override void Execute(MessageWrapper msg)
         {
             if (!Guid.TryParse(msg.Content, out var guid))
             {
                 msg.RawMsg.Channel.SendMessageAsync("The argument of this command must be a valid Reply ID.");
             }
-            else if (_replyModule.TryGetReply(Utils.GetGuild(msg.RawMsg).Id, guid, out var reply))
+            else if (_replyModule.TryGetReply(Utils.GetGuild(msg.RawMsg).Id, guid, out var reply) && reply != null)
             {
                 msg.RawMsg.Channel.SendMessageAsync(reply.ToString());
             }
@@ -175,7 +173,6 @@ namespace bot
                 msg.RawMsg.Channel.SendMessageAsync("There is no reply with this ID.");
             }
 
-            return true;
         }
     }
 }

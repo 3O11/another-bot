@@ -4,6 +4,6 @@
     {
         public string Keyword { get; }
         public string HelpText { get; }
-        public bool Execute(MessageWrapper msg);
+        public void Execute(MessageWrapper msg);
     }
 }

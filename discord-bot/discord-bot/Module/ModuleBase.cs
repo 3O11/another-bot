@@ -23,7 +23,7 @@ namespace bot
             return false;
         }
 
-        public bool ProcessCommands(MessageWrapper msg)
+        public void ProcessCommand(MessageWrapper msg)
         {
             var content = msg.Content;
             if (content.StartsWith(Keyword))
@@ -40,14 +40,14 @@ namespace bot
                 }
                 else
                 {
-                    return false;
+                    return;
                 }
 
                 string commandKeyword = Utils.ExtractFirstKeyword(msg.Content);
                 if (_commands.TryGetValue(commandKeyword, out var command))
                 {
                     msg.BumpOffset(commandKeyword.Length + (commandKeyword.Length == msg.Content.Length ? 0 : 1));
-                    if (command.Execute(msg)) return true;
+                    command.Execute(msg);
                 }
                 else if (commandKeyword == "")
                 {
@@ -57,11 +57,7 @@ namespace bot
                 {
                     msg.RawMsg.Channel.SendMessageAsync("This module does not contain this command.");
                 }
-
-                return true;
-            }
-
-            return false;
+            };
         }
 
         public virtual bool ProcessTriggers(MessageWrapper msg)

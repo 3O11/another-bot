@@ -31,7 +31,7 @@
                 "Note #5: All dialogues can be immediately ended by the `terminate` keyword.";
         }
 
-        public bool Execute(MessageWrapper msg)
+        public void Execute(MessageWrapper msg)
         {
             if (msg.Content == "")
             {
@@ -45,7 +45,6 @@
             {
                 msg.RawMsg.Channel.SendMessageAsync(_bot.GetHelpString(msg.Content));
             }
-            return true;
         }
 
         Bot _bot;

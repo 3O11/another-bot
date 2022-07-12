@@ -116,7 +116,7 @@ namespace bot
                     }
                     if (_modules.TryGetValue(keyword, out var commModule))
                     {
-                        commModule.ProcessCommands(wrappedMsg);
+                        commModule.ProcessCommand(wrappedMsg);
                         return;
                     }
                 }

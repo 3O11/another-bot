@@ -4,7 +4,7 @@
     {
         string Keyword { get; }
         bool ProcessDialogues(MessageWrapper msg);
-        bool ProcessCommands(MessageWrapper msg);
+        void ProcessCommand(MessageWrapper msg);
         bool ProcessTriggers(MessageWrapper msg);
         string GetHelpString(string commandKeyword = "");
         string GetCommandNames();
