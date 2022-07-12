@@ -26,6 +26,8 @@ namespace bot
             module.AddCommand(new ModifyReplyCommand(module));
             module.AddCommand(new ListReplyCommand(module));
             module.AddCommand(new InfoReplyCommand(module));
+            module.AddCommand(new BackupReplyCommand(module));
+            module.AddCommand(new LoadBackupReplyCommand(module));
 
             return module;
         }
@@ -114,6 +116,36 @@ namespace bot
             }
 
             return replyIds;
+        }
+
+        public List<ReplyRecord> GetReplyRecords(ulong guildId)
+        {
+            if (_replyStorage.TryGetValue(guildId, out var replies))
+            {
+                lock (replies.Item2)
+                {
+                    return replies.Item1.ConvertAll(reply => reply.GetRecord());
+                }
+            }
+            else
+            {
+                return new();
+            }
+        }
+
+        public void SetReplies(ulong guildId, List<ReplyRecord> records)
+        {
+            if (_replyStorage.TryGetValue(guildId, out var replies))
+            {
+                lock (replies.Item2)
+                {
+                    replies.Item1 = records.ConvertAll(replyRecord => new Reply(replyRecord));
+                }
+            }
+            else
+            {
+                _replyStorage.TryAdd(guildId, new(records.ConvertAll(replyRecord => new Reply(replyRecord)), new()));
+            }
         }
 
         // Using Lists for the actual per-server reply storage is far from ideal.

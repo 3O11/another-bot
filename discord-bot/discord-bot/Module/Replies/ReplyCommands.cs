@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
+using System.IO;
 
 namespace bot
 {
@@ -172,7 +174,71 @@ namespace bot
             {
                 msg.RawMsg.Channel.SendMessageAsync("There is no reply with this ID.");
             }
+        }
+    }
 
+    internal class BackupReplyCommand : ReplyCommand
+    {
+        private static string helpText =
+            "Usage: <botname> <reply> backup\n" +
+            "\n" +
+            "Takes no parameters.\n" +
+            "Saves the replies that have been specified on this " +
+            "server to the bot's persistent storage.";
+
+        public BackupReplyCommand(ReplyModule replyModule)
+            : base("backup", helpText, replyModule)
+        { }
+
+        public override void Execute(MessageWrapper msg)
+        {
+            msg.RawMsg.Channel.SendMessageAsync("Starting the backup ...");
+
+            var replies = _replyModule.GetReplyRecords(Utils.GetGuild(msg.RawMsg).Id);
+
+            Directory.CreateDirectory("ReplyData");
+            using (var file = new StreamWriter("ReplyData/" + Utils.GetGuild(msg.RawMsg).Id.ToString() + ".json"))
+            {
+                file.Write(JsonSerializer.Serialize(replies));
+            }
+
+            msg.RawMsg.Channel.SendMessageAsync("Backup finished successfully.");
+        }
+    }
+
+    internal class LoadBackupReplyCommand : ReplyCommand
+    {
+        private static string helpText =
+            "[WIP]";
+
+        public LoadBackupReplyCommand(ReplyModule replyModule)
+            : base("load_backup", helpText, replyModule)
+        { }
+
+        public override void Execute(MessageWrapper msg)
+        {
+            msg.RawMsg.Channel.SendMessageAsync("Loading the backup ...");
+
+            try
+            {
+                using (var file = new StreamReader("ReplyData/" + Utils.GetGuild(msg.RawMsg).Id.ToString() + ".json"))
+                {
+                    var replies = JsonSerializer.Deserialize<List<ReplyRecord>>(file.ReadToEnd());
+                    if (replies != null)
+                    {
+                        _replyModule.SetReplies(Utils.GetGuild(msg.RawMsg).Id, replies);
+                        msg.RawMsg.Channel.SendMessageAsync("Backup loaded successfully.");
+                    }
+                    else
+                    {
+                        msg.RawMsg.Channel.SendMessageAsync("There is no backup to load.");
+                    }
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                msg.RawMsg.Channel.SendMessageAsync("There is no backup to load.");
+            }
         }
     }
 }

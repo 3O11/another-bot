@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using Discord.WebSocket;
 
 // It might be overkill to use Guids here, but it is a more reliable and faster
@@ -18,7 +19,7 @@ namespace bot
 
     internal class Reply
     {
-        public Reply(string trigger, string reply, ReplyMatchCondition match, HashSet<ulong>? channelIds = null, HashSet<ulong>? userIds = null)
+        public Reply(string trigger, string? reply, ReplyMatchCondition match, HashSet<ulong>? channelIds = null, HashSet<ulong>? userIds = null)
         {
             Id = Guid.NewGuid();
             _trigger = trigger;
@@ -26,6 +27,26 @@ namespace bot
             _condition = match;
             _channels = channelIds != null ? channelIds : new();
             _users = userIds != null ? userIds : new();
+        }
+
+        public Reply(Reply other)
+        {
+            Id = other.Id;
+            _trigger = other._trigger;
+            _reply = other._reply;
+            _condition = other._condition;
+            _channels = new HashSet<ulong>(other._channels);
+            _users = new HashSet<ulong>(other._users);
+        }
+
+        public Reply(ReplyRecord other)
+        {
+            Id = other.Id;
+            _trigger = other.Trigger;
+            _reply = other.Reply;
+            _condition = other.Condition;
+            _channels = other.Channels;
+            _users = other.Users;
         }
 
         public bool Process(SocketMessage msg)
@@ -163,12 +184,22 @@ namespace bot
             return str.ToString();
         }
 
+        public ReplyRecord GetRecord()
+        {
+            lock (_replyLock)
+            {
+                return new ReplyRecord(Id, _reply, _trigger, _condition, _channels, _users);
+            }
+        }
+
         public Guid Id { get; init; }
-        private string _reply;
+        private string? _reply;
         private string _trigger;
         private ReplyMatchCondition _condition;
         private HashSet<ulong> _channels;
         private HashSet<ulong> _users;
         private readonly object _replyLock = new();
     }
+
+    internal record class ReplyRecord(Guid Id, string? Reply, string Trigger, ReplyMatchCondition Condition, HashSet<ulong> Channels, HashSet<ulong> Users);
 }
