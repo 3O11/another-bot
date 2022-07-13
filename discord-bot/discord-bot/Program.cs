@@ -16,10 +16,9 @@ namespace bot
                 Console.WriteLine("'token' is missing in botsettings.txt, terminating the bot!");
 				return;
             }
-			if (!settings.TryGetString("bot_name", out var botname))
+			if (!settings.TryGetString("botname", out var botname))
             {
-                Console.WriteLine("'bot_name' is missing in botsettings.txt, terminating the bot!");
-				return;
+				botname = "3011";
             }
 
 			var bot = new Bot(botname, token);
