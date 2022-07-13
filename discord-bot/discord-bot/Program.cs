@@ -1,14 +1,28 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace bot
 {
 	public class Program
 	{
-		public static Task Main(string[] args) => new Program().MainAsync();
+		public static Task Main(string[] args) => MainAsync();
 
-		public async Task MainAsync()
+		public static async Task MainAsync()
 		{
-			var bot = new Bot("3011", "Insert your token here.");
+
+			var settings = BotSettings.Load("botsettings.txt");
+			if (!settings.TryGetString("token", out var token))
+            {
+                Console.WriteLine("'token' is missing in botsettings.txt, terminating the bot!");
+				return;
+            }
+			if (!settings.TryGetString("bot_name", out var botname))
+            {
+                Console.WriteLine("'bot_name' is missing in botsettings.txt, terminating the bot!");
+				return;
+            }
+
+			var bot = new Bot(botname, token);
 
 			bot.AddCommand(new HelpCommand(bot));
 			bot.AddModule(ReplyModule.MakeModule("reply"));
@@ -18,5 +32,10 @@ namespace bot
 
 			await Task.Delay(-1);
 		}
+
+		public static void PrepareEnvironment()
+        {
+
+        }
 	}
 }

@@ -4,7 +4,7 @@ namespace bot
 {
     internal class UtilitiesModule : ModuleBase
     {
-        UtilitiesModule(string keyword)
+        UtilitiesModule(string keyword = "utils")
         {
             Keyword = keyword;
         }

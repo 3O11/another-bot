@@ -11,7 +11,7 @@ namespace bot
             Keyword = keyword;
         }
 
-        public static ReplyModule MakeModule(string keyword)
+        public static ReplyModule MakeModule(string keyword = "help")
         {
             var module = new ReplyModule(keyword);
 
