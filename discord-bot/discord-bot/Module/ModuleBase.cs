@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Text;
 
 namespace bot
@@ -9,12 +10,13 @@ namespace bot
 
         public bool ProcessDialogues(MessageWrapper msg)
         {
-            if (_activeDialogues.TryGetValue(msg.RawMsg.Channel.Id, out var dialogue))
+            var dialogueId = new ValueTuple<ulong, ulong>(msg.RawMsg.Channel.Id, msg.RawMsg.Author.Id);
+            if (_activeDialogues.TryGetValue(dialogueId, out var dialogue))
             {
                 var status = dialogue.Update(msg.RawMsg);
                 if (status == DialogueStatus.Finished || status == DialogueStatus.Error)
                 {
-                    _activeDialogues.TryRemove(msg.RawMsg.Channel.Id, out var _);
+                    _activeDialogues.TryRemove(dialogueId, out var _);
                 }
 
                 return true;
@@ -111,13 +113,14 @@ namespace bot
             return names.ToString();
         }
 
-        public void AddDialogue(ulong channelId, IDialogue dialogue)
+        public void AddDialogue(MessageWrapper msg, IDialogue dialogue)
         {
-            _activeDialogues[channelId] = dialogue;
+            _activeDialogues[new(msg.RawMsg.Channel.Id, msg.RawMsg.Author.Id)] = dialogue;
         }
 
         protected string _moduleDescription = "";
-        private ConcurrentDictionary<ulong, IDialogue> _activeDialogues = new();
+        // First key ulong is channelId, second key ulong is userId
+        private ConcurrentDictionary<ValueTuple<ulong, ulong>, IDialogue> _activeDialogues = new();
         private ConcurrentDictionary<string, ICommand> _commands = new();
     }
 }

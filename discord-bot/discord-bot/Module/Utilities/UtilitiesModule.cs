@@ -70,7 +70,7 @@ namespace bot
             );
 
             dialogue.Update(msg.RawMsg);
-            AddDialogue(msg.RawMsg.Channel.Id, dialogue);
+            AddDialogue(msg, dialogue);
         }
     }
 }

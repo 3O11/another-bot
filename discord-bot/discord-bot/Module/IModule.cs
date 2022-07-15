@@ -3,7 +3,6 @@
     internal interface IModule
     {
         string Keyword { get; }
-        void AddDialogue(ulong channelId, IDialogue dialogue);
         bool ProcessDialogues(MessageWrapper msg);
         void AddCommand(ICommand command);
         void ProcessCommand(MessageWrapper msg);

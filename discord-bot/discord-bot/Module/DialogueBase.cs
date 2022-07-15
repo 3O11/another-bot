@@ -6,6 +6,11 @@ namespace bot
 {
     internal class DialogueBase : IDialogue
     {
+        public void PingUser(ulong userId)
+        {
+            _userId = userId;
+        }
+
         public DialogueStatus Update(SocketMessage msg)
         {
             if (msg.Content == "terminate")
@@ -27,6 +32,12 @@ namespace bot
                 msg.Channel.SendMessageAsync("The dialogue is broken, please report this issue to the author.");
             }
 
+            if (_outBuffer != "")
+            {
+                msg.Channel.SendMessageAsync((_userId != 0 ? $"<@!{_userId}>, " : "") + _outBuffer);
+                _outBuffer = "";
+            }
+
             if (_currentState == "final") return DialogueStatus.Finished;
             if (_currentState == "error") return DialogueStatus.Error;
 
@@ -39,6 +50,8 @@ namespace bot
         }
 
         protected string _currentState = "start";
+        protected string _outBuffer = "";
+        ulong _userId = 0;
         Dictionary<string, Func<string, SocketMessage, string>> _transitionFunc = new();
     }
 }
