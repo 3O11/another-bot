@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Text;
+using System.Text.Json;
+using System.IO;
 
 namespace bot
 {
@@ -26,8 +29,8 @@ namespace bot
             module.AddCommand(new ModifyReplyCommand(module));
             module.AddCommand(new ListReplyCommand(module));
             module.AddCommand(new InfoReplyCommand(module));
-            module.AddCommand(new BackupReplyCommand(module));
-            module.AddCommand(new LoadBackupReplyCommand(module));
+            //module.AddCommand(new BackupReplyCommand(module));
+            //module.AddCommand(new LoadBackupReplyCommand(module));
 
             return module;
         }
@@ -145,6 +148,69 @@ namespace bot
             else
             {
                 _replyStorage.TryAdd(guildId, new(records.ConvertAll(replyRecord => new Reply(replyRecord)), new()));
+            }
+        }
+
+        public bool SaveReplies(ulong guildId = 0)
+        {
+            foreach (var id in guildId == 0 ? _replyStorage.Keys : new List<ulong> { guildId })
+            {
+                var replies = GetReplyRecords(guildId);
+
+                Directory.CreateDirectory("ReplyData");
+                using (var file = new StreamWriter("ReplyData/" + guildId.ToString() + ".json"))
+                {
+                    file.Write(JsonSerializer.Serialize(replies));
+                }
+            }
+
+            return true;
+        }
+
+        public bool LoadReplies(ulong guildId = 0)
+        {
+            try
+            {
+                if (guildId != 0)
+                {
+                    using (var file = new StreamReader("ReplyData/" + guildId.ToString() + ".json"))
+                    {
+                        var replies = JsonSerializer.Deserialize<List<ReplyRecord>>(file.ReadToEnd());
+                        if (replies != null)
+                        {
+                            SetReplies(guildId, replies);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var filename in Directory.GetFiles("ReplyData"))
+                    {
+                        if (ulong.TryParse(Path.GetFileNameWithoutExtension(filename), out guildId))
+                        {
+                            using (var file = new StreamReader(filename))
+                            {
+                                var replies = JsonSerializer.Deserialize<List<ReplyRecord>>(file.ReadToEnd());
+                                if (replies != null)
+                                {
+                                    SetReplies(guildId, replies);
+                                }
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                
+            }
+            catch (FileNotFoundException)
+            {
+                return false;
             }
         }
 

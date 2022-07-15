@@ -24,8 +24,11 @@ namespace bot
 			var bot = new Bot(botname, token);
 
 			bot.AddCommand(new HelpCommand(bot));
-			bot.AddModule(ReplyModule.MakeModule("reply"));
 			bot.AddModule(UtilitiesModule.MakeModule("utils"));
+
+			var replyModule = ReplyModule.MakeModule("reply");
+			replyModule.LoadReplies();
+			bot.AddModule(replyModule);
 
 			bot.Start();
 

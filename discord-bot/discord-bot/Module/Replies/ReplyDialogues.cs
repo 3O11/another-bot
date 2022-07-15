@@ -131,8 +131,8 @@ namespace bot
                             d.userIds != null ? new(d.userIds) : null
                         )
                     );
-
-                    msg.Channel.SendMessageAsync("Closing dialogue");
+                    d.replyModule.SaveReplies(Utils.GetGuild(msg).Id);
+                    d._outBuffer = "Terminating dialogue";
 
                     return "final";
                 }
@@ -164,7 +164,7 @@ namespace bot
                 "start",
                 (string state, SocketMessage msg) =>
                 {
-                    msg.Channel.SendMessageAsync("Specify the ID of the reply to be modified");
+                    d._outBuffer ="Specify the ID of the reply to be modified";
                     return "replyId";
                 }
             );
@@ -323,6 +323,8 @@ namespace bot
                     }
                     else
                     {
+                        msg.Channel.SendMessageAsync("Saving changes ...");
+                        d.replyModule.SaveReplies(Utils.GetGuild(msg).Id);
                         d._outBuffer = "Terminating dialogue";
                         return "final";
                     }
