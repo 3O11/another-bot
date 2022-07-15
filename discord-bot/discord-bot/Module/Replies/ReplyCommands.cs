@@ -70,6 +70,7 @@ namespace bot
             }
             else if (_replyModule.RemoveReply(Utils.GetGuild(msg.RawMsg).Id, guid))
             {
+                _replyModule.SaveReplies(Utils.GetGuild(msg.RawMsg).Id);
                 msg.RawMsg.Channel.SendMessageAsync("The reply was removed succesfully.");
             }
             else
