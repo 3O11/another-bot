@@ -24,7 +24,7 @@ namespace bot
                 "start",
                 (string state, SocketMessage msg) =>
                 {
-                    d._outBuffer = "Specify trigger, type `everything` to make the bot respond to everything.";
+                    d.AppendResponse("Specify trigger, type `everything` to make the bot respond to everything.");
                     return "trigger";
                 }
             );
@@ -42,7 +42,7 @@ namespace bot
                         d.trigger = msg.Content;
                     }
 
-                    d._outBuffer = "Specify match type [any, full, startsWith, endsWith]";
+                    d.AppendResponse("Specify match type [any, full, startsWith, endsWith]");
                     return "matchType";
                 }
             );
@@ -66,11 +66,11 @@ namespace bot
                         d.matchCondition = ReplyMatchCondition.EndsWith;
                         break;
                     default:
-                        d._outBuffer = "The match type was not recognized, please try again.";
+                        d.AppendResponse("The match type was not recognized, please try again.");
                         return "matchType";
                     }
 
-                    d._outBuffer = "Specify reply body";
+                    d.AppendResponse("Specify reply body");
                     return "reply";
                 }
             );
@@ -81,7 +81,7 @@ namespace bot
                 {
                     d.reply = msg.Content;
 
-                    d._outBuffer = "Specify target users via mentions or IDs [separate each ID with any sequence of non-numeric characters, or you can use `everyone`]";
+                    d.AppendResponse("Specify target users via mentions or IDs [separate each ID with any sequence of non-numeric characters, or you can use `everyone`]");
                     return "users";
                 }
             );
@@ -95,12 +95,12 @@ namespace bot
                         d.userIds = Utils.ExtractIds(msg.Content);
                         if (d.userIds == null)
                         {
-                            d._outBuffer = "No valid IDs have been found, please try again or specify `everyone` explicitly";
+                            d.AppendResponse("No valid IDs have been found, please try again or specify `everyone` explicitly");
                             return "users";
                         }
                     }
 
-                    d._outBuffer = "Specify target channels [or use `anywhere`]";
+                    d.AppendResponse("Specify target channels [or use `anywhere`]");
                     return "channels";
                 }
             );
@@ -114,7 +114,7 @@ namespace bot
                         d.channelIds = Utils.ExtractIds(msg.Content);
                         if (d.channelIds == null)
                         {
-                            d._outBuffer = "No valid IDs have been found, please try again or specify `anywhere` explicitly";
+                            d.AppendResponse("No valid IDs have been found, please try again or specify `anywhere` explicitly");
                             return "channels";
                         }
                     }
@@ -132,7 +132,7 @@ namespace bot
                         )
                     );
                     d.replyModule.SaveReplies(Utils.GetGuild(msg).Id);
-                    d._outBuffer = "Terminating dialogue";
+                    d.AppendResponse("Terminating dialogue");
 
                     return "final";
                 }
@@ -164,7 +164,7 @@ namespace bot
                 "start",
                 (string state, SocketMessage msg) =>
                 {
-                    d._outBuffer ="Specify the ID of the reply to be modified";
+                    d.AppendResponse("Specify the ID of the reply to be modified");
                     return "replyId";
                 }
             );
@@ -178,18 +178,18 @@ namespace bot
                         if (d.replyModule.TryGetReply(Utils.GetGuild(msg).Id, replyId, out var reply) && reply != null)
                         {
                             d.reply = reply;
-                            d._outBuffer = "Reply selected, specify which value you'd like to modify [trigger, reply, matchCondition, users, channels]";
+                            d.AppendResponse("Reply selected, specify which value you'd like to modify [trigger, reply, matchCondition, users, channels]");
                             return "modValue";
                         }
                         else
                         {
-                            d._outBuffer = "There is no message with this ID, please try another.";
+                            d.AppendResponse("There is no message with this ID, please try another.");
                             return "replyId";
                         }
                     }
                     else
                     {
-                        d._outBuffer = "That is not a valid ID, please try again";
+                        d.AppendResponse("That is not a valid ID, please try again");
                         return "replyId";
                     }
                 }
@@ -202,12 +202,12 @@ namespace bot
                     string[] keywords = new string[] { "trigger", "reply", "matchCondition", "users", "channels" };
                     if (keywords.Contains(msg.Content))
                     {
-                        d._outBuffer = msg.Content + " selected, specify the new value";
+                        d.AppendResponse(msg.Content + " selected, specify the new value");
                         return msg.Content;
                     }
                     else
                     {
-                        d._outBuffer = "Invalid value keyword, please try again";
+                        d.AppendResponse("Invalid value keyword, please try again");
                         return "modValue";
                     }
                 }
@@ -219,7 +219,7 @@ namespace bot
                 {
                     d.reply.SetTrigger(msg.Content);
 
-                    d._outBuffer = "Change another value? [y/N]";
+                    d.AppendResponse("Change another value? [y/N]");
                     return "repeat";
                 }
             );
@@ -230,7 +230,7 @@ namespace bot
                 {
                     d.reply.SetReply(msg.Content);
 
-                    d._outBuffer = "Change another value? [y/N]";
+                    d.AppendResponse("Change another value? [y/N]");
                     return "repeat";
                 }
             );
@@ -254,11 +254,11 @@ namespace bot
                             d.reply.SetMatchCondition(ReplyMatchCondition.EndsWith);
                             break;
                         default:
-                            d._outBuffer = "The match type was not recognized, please try again.";
+                            d.AppendResponse("The match type was not recognized, please try again.");
                             return "matchCondition";
                     }
 
-                    d._outBuffer = "Change another value? [y/N]";
+                    d.AppendResponse("Change another value? [y/N]");
                     return "repeat";
                 }
             );
@@ -272,7 +272,7 @@ namespace bot
                         var userIds = Utils.ExtractIds(msg.Content);
                         if (userIds == null)
                         {
-                            d._outBuffer = "No valid IDs have been found, please try again or specify `everyone` explicitly";
+                            d.AppendResponse("No valid IDs have been found, please try again or specify `everyone` explicitly");
                             return "users";
                         }
                         d.reply.SetUsers(userIds);
@@ -282,7 +282,7 @@ namespace bot
                         d.reply.SetUsers(null);
                     }
 
-                    d._outBuffer = "Change another value? [y/N]";
+                    d.AppendResponse("Change another value? [y/N]");
                     return "repeat";
                 }
             );
@@ -296,7 +296,7 @@ namespace bot
                         var channelIds = Utils.ExtractIds(msg.Content);
                         if (channelIds == null)
                         {
-                            d._outBuffer = "No valid IDs have been found, please try again or specify `anywhere` explicitly";
+                            d.AppendResponse("No valid IDs have been found, please try again or specify `anywhere` explicitly");
                             return "channels";
                         }
                         d.reply.SetChannels(channelIds);
@@ -306,7 +306,7 @@ namespace bot
                         d.reply.SetChannels(null);
                     }
 
-                    d._outBuffer = "Change another value? [y/N]";
+                    d.AppendResponse("Change another value? [y/N]");
                     return "repeat";
                 }
             );
@@ -318,14 +318,14 @@ namespace bot
                     string[] keywords = new string[] { "y", "Y", "yes", "Yes" };
                     if (keywords.Contains(msg.Content))
                     {
-                        d._outBuffer = "Specify which value you'd like to modify [trigger, reply, matchCondition, userIds, channelIds]";
+                        d.AppendResponse("Specify which value you'd like to modify [trigger, reply, matchCondition, userIds, channelIds]");
                         return "modValue";
                     }
                     else
                     {
                         msg.Channel.SendMessageAsync("Saving changes ...");
                         d.replyModule.SaveReplies(Utils.GetGuild(msg).Id);
-                        d._outBuffer = "Terminating dialogue";
+                        d.AppendResponse("Terminating dialogue");
                         return "final";
                     }
                 }

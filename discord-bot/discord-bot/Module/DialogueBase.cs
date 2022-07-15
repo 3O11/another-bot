@@ -11,6 +11,11 @@ namespace bot
             _userId = userId;
         }
 
+        public void AppendResponse(string response)
+        {
+            _outBuffer += response;
+        }
+
         public DialogueStatus Update(SocketMessage msg)
         {
             if (msg.Content == "terminate")
@@ -50,7 +55,7 @@ namespace bot
         }
 
         protected string _currentState = "start";
-        protected string _outBuffer = "";
+        string _outBuffer = "";
         ulong _userId = 0;
         Dictionary<string, Func<string, SocketMessage, string>> _transitionFunc = new();
     }

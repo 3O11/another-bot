@@ -12,6 +12,7 @@ namespace bot
     interface IDialogue
     {
         void PingUser(ulong userId);
+        void AppendResponse(string response);
         DialogueStatus Update(SocketMessage msg);
     }
 }
