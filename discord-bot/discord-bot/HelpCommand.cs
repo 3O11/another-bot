@@ -35,15 +35,15 @@
         {
             if (msg.Content == "")
             {
-                msg.RawMsg.Channel.SendMessageAsync(HelpText + "\n\n" + _bot.GetHelpString(""));
+                msg.RawMsg.Channel.SendMessageAsync(HelpText.Replace("<botname>", _bot.Name) + "\n\n" + _bot.GetHelpString("").Replace("<botname>", _bot.Name));
             }
             else if (msg.Content == "help")
             {
-                msg.RawMsg.Channel.SendMessageAsync("Ayy, self reference.\n\n" + HelpText);
+                msg.RawMsg.Channel.SendMessageAsync("Ayy, self reference.\n\n" + HelpText.Replace("<botname>", _bot.Name));
             }
             else
             {
-                msg.RawMsg.Channel.SendMessageAsync(_bot.GetHelpString(msg.Content));
+                msg.RawMsg.Channel.SendMessageAsync(_bot.GetHelpString(msg.Content).Replace("<botname>", _bot.Name));
             }
         }
 

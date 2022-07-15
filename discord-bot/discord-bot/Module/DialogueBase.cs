@@ -39,7 +39,7 @@ namespace bot
 
             if (_outBuffer != "")
             {
-                msg.Channel.SendMessageAsync((_userId != 0 ? $"<@!{_userId}>, " : "") + _outBuffer);
+                msg.Channel.SendMessageAsync((_userId != 0 ? $"<@!{_userId}> " : "") + _outBuffer);
                 _outBuffer = "";
             }
 
