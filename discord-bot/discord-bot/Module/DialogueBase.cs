@@ -20,7 +20,7 @@ namespace bot
         {
             if (msg.Content == "terminate")
             {
-                msg.Channel.SendMessageAsync("Terminating the dialogue");
+                AppendResponse("Terminating dialogue");
                 return DialogueStatus.Finished;
             }
 

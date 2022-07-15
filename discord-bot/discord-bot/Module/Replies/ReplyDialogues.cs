@@ -36,14 +36,15 @@ namespace bot
                     if (msg.Content == "everything")
                     {
                         d.trigger = null;
+                        d.AppendResponse("Specify reply body");
+                        return "reply";
                     }
                     else
                     {
                         d.trigger = msg.Content;
+                        d.AppendResponse("Specify match type [any, full, startsWith, endsWith]");
+                        return "matchType";
                     }
-
-                    d.AppendResponse("Specify match type [any, full, startsWith, endsWith]");
-                    return "matchType";
                 }
             );
 

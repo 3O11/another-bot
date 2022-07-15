@@ -189,19 +189,26 @@ namespace bot
                 }
                 else
                 {
-                    foreach (var filename in Directory.GetFiles("ReplyData"))
+                    try
                     {
-                        if (ulong.TryParse(Path.GetFileNameWithoutExtension(filename), out guildId))
+                        foreach (var filename in Directory.GetFiles("ReplyData"))
                         {
-                            using (var file = new StreamReader(filename))
+                            if (ulong.TryParse(Path.GetFileNameWithoutExtension(filename), out guildId))
                             {
-                                var replies = JsonSerializer.Deserialize<List<ReplyRecord>>(file.ReadToEnd());
-                                if (replies != null)
+                                using (var file = new StreamReader(filename))
                                 {
-                                    SetReplies(guildId, replies);
+                                    var replies = JsonSerializer.Deserialize<List<ReplyRecord>>(file.ReadToEnd());
+                                    if (replies != null)
+                                    {
+                                        SetReplies(guildId, replies);
+                                    }
                                 }
                             }
                         }
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        Console.WriteLine("No replies exist.");
                     }
 
                     return true;
