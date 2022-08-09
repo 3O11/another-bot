@@ -9,7 +9,6 @@ namespace bot
 
 		public static async Task MainAsync()
 		{
-
 			var settings = BotSettings.Load("botsettings.txt");
 			if (!settings.TryGetString("token", out var token))
             {

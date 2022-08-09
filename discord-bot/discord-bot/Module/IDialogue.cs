@@ -9,10 +9,14 @@ namespace bot
         Error
     }
 
+    /// <summary>
+    /// This interface intentionally provides only the bare minimum that is
+    /// needed to enable different styles of dialogue implementation.
+    /// 
+    /// The Update function is called each time the Dialogue should update.
+    /// </summary>
     interface IDialogue
     {
-        void PingUser(ulong userId);
-        void AppendResponse(string response);
         DialogueStatus Update(SocketMessage msg);
     }
 }

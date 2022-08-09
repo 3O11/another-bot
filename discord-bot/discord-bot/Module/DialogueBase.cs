@@ -6,7 +6,7 @@ namespace bot
 {
     internal class DialogueBase : IDialogue
     {
-        public void PingUser(ulong userId)
+        public void SetUserPing(ulong userId)
         {
             _userId = userId;
         }

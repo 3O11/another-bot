@@ -39,7 +39,7 @@ namespace bot
             if (msg.Content == "")
             {
                 var dialogue = ReplyAddDialogue.MakeDialogue(_replyModule);
-                dialogue.PingUser(msg.RawMsg.Author.Id);
+                dialogue.SetUserPing(msg.RawMsg.Author.Id);
                 dialogue.Update(msg.RawMsg);
                 _replyModule.AddDialogue(msg, dialogue);
             }
@@ -97,7 +97,7 @@ namespace bot
             if (msg.Content == "")
             {
                 var dialogue = ReplyModifyDialogue.MakeDialogue(_replyModule);
-                dialogue.PingUser(msg.RawMsg.Author.Id);
+                dialogue.SetUserPing(msg.RawMsg.Author.Id);
                 dialogue.Update(msg.RawMsg);
                 _replyModule.AddDialogue(msg, dialogue);
             }
