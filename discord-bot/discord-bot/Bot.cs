@@ -14,6 +14,12 @@ namespace bot
             Name = name;
             _token = token;
 
+            var config = new DiscordSocketConfig();
+            config.GatewayIntents = GatewayIntents.AllUnprivileged 
+                                  | GatewayIntents.MessageContent;
+
+            _client = new DiscordSocketClient(config);
+
             _client.Log += Log;
             _client.MessageReceived += OnMessage;
         }
@@ -136,7 +142,7 @@ namespace bot
         public string Name { get; init; }
 
         private string _token;
-        private DiscordSocketClient _client = new();
+        private DiscordSocketClient _client;
         private ConcurrentDictionary<string, ICommand> _commands = new();
         private ConcurrentDictionary<string, IModule> _modules = new();
     }

@@ -197,7 +197,7 @@ namespace bot
         {
             lock (_replyLock)
             {
-                return new ReplyRecord(Id, _reply, _trigger, _condition, _channels, _users);
+                return new ReplyRecord(Id, _reply, _trigger, _condition, new HashSet<ulong>(_channels), new HashSet<ulong>(_users));
             }
         }
 

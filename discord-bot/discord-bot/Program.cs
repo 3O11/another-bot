@@ -29,6 +29,9 @@ namespace bot
 			replyModule.LoadReplies();
 			bot.AddModule(replyModule);
 
+			var moviesModule = MoviesModule.MakeModule("movies");
+            bot.AddModule(moviesModule);
+
 			bot.Start();
 
 			await Task.Delay(-1);
