@@ -99,7 +99,7 @@ namespace bot
             request.AddHeader("accept", "application/json");
             request.AddHeader("Authorization", "Bearer " + _tmdbkey);
             RestResponse response = client.Execute(request);
-            msg.RawMsg.Channel.SendMessageAsync("```" + response.Content.Substring(0, 1900) + "```");
+            msg.RawMsg.Channel.SendMessageAsync("```" + response.Content.Substring(0, Math.Min(response.Content.Length, 1900)) + "```");
         }
     }
 
@@ -141,7 +141,7 @@ namespace bot
             request.AddHeader("accept", "application/json");
             request.AddHeader("Authorization", "Bearer " + _tmdbkey);
             RestResponse response = client.Execute(request);
-            msg.RawMsg.Channel.SendMessageAsync($"Selected movie at index: {selectedMovie + 1}\n```" + response.Content.Substring(0, 1900) + "```");
+            msg.RawMsg.Channel.SendMessageAsync($"Selected movie at index: {selectedMovie + 1}\n```" + response.Content.Substring(0, Math.Min(response.Content.Length, 1900)) + "```");
         }
     }
 
