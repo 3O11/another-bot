@@ -13,7 +13,7 @@ namespace bot
             Keyword = keyword;
         }
 
-        public static MoviesModule MakeModule(string keyword = "movies")
+        public static MoviesModule MakeModule(string keyword = "movies", string tmdbToken = "none")
         {
             var module = new MoviesModule(keyword);
 
@@ -22,9 +22,13 @@ namespace bot
                 "Supports adding movies to a movie \"lottery\" and actually " +
                 "picking a movie to watch.";
 
+            var movieStorage = MovieStorage.Load();
 
-
-            module.AddCommand(new AddMovieCommand(module));
+            module.AddCommand(new AddMovieCommand(movieStorage));
+            module.AddCommand(new ListMoviesCommand(movieStorage));
+            module.AddCommand(new RemoveMovieCommand(movieStorage));
+            module.AddCommand(new InfoMovieCommand(movieStorage, tmdbToken));
+            module.AddCommand(new LotteryMovieCommand(movieStorage, tmdbToken));
 
             return module;
         }

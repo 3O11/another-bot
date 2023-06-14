@@ -19,6 +19,10 @@ namespace bot
             {
 				botname = "3011";
             }
+			if (!settings.TryGetString("tmdbkey", out var tmdbkey))
+			{
+				tmdbkey = "none";
+			}
 
 			var bot = new Bot(botname, token);
 
@@ -29,7 +33,7 @@ namespace bot
 			replyModule.LoadReplies();
 			bot.AddModule(replyModule);
 
-			var moviesModule = MoviesModule.MakeModule("movies");
+			var moviesModule = MoviesModule.MakeModule("movies", tmdbkey);
             bot.AddModule(moviesModule);
 
 			bot.Start();
