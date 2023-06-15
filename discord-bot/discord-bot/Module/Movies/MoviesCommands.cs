@@ -219,6 +219,13 @@ namespace bot
             reply.AppendLine("```");
             for (int i = 0; i < movies.Count; ++i)
             {
+                if (reply.Length + movies[i].TmdbLink.ToString().Length > 1900)
+                {
+                    reply.AppendLine("```");
+                    msg.RawMsg.Channel.SendMessageAsync(reply.ToString());
+                    reply = new StringBuilder();
+                    reply.AppendLine("```");
+                }
                 reply.AppendLine((i + 1).ToString().PadLeft(length) + ": " + movies[i].TmdbLink);
             }
             reply.AppendLine("```");
